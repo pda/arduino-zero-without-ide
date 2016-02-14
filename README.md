@@ -58,5 +58,28 @@ make
 mkdir -p ~/bin && ln -s ~/code/BOSSA/bin/bossa* ~/bin/
 ```
 
-[avrdude]: http://www.nongnu.org/avrdude/
+Atmel Cortex Microcontroller Software Interface Standard (CMSIS)
+----------------------------------------------------------------
+
+* ARM's [CMSIS - Cortex Microcontroller Software Interface Standard][CMSIS] is a thing.
+* Atmel's [Atmel Software Framework (ASF)][ASF] [supports CMSIS][ASF-CMSIS].
+* 421 MB ASF 3.30: http://www.atmel.com/images/asf-standalone-archive-3.30.0.43.zip
+
+Files that look specifically relevant:
+
+```
+sam0/utils/cmsis/samd21/include/pio/samd21g18a.h
+sam0/utils/cmsis/samd21/include/samd21g18a.h
+sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
+sam0/utils/linker_scripts/samd21/gcc/samd21g18a_flash.ld
+sam0/utils/linker_scripts/samd21/gcc/samd21g18a_sram.ld
+```
+
+Other headers etc in `sam0/utils/cmsis/samd21` could also be useful.
+
+
+[ASF-CMSIS]: http://asf.atmel.com/docs/latest/cmsis.html
+[ASF]: http://asf.atmel.com/docs/latest/index.html
 [BOSSA]: http://www.shumatech.com/web/products/bossa
+[CMSIS]: http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php
+[avrdude]: http://www.nongnu.org/avrdude/
