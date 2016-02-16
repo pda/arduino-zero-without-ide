@@ -64,7 +64,7 @@ Atmel Cortex Microcontroller Software Interface Standard (CMSIS)
 * ARM's [CMSIS - Cortex Microcontroller Software Interface Standard][CMSIS] is a thing.
 * Atmel's [Atmel Software Framework (ASF)][ASF] [supports CMSIS][ASF-CMSIS].
 * ASF (421 MB): [asf-standalone-archive-3.30.0.43.zip][ASF download]
-* CMSIS (44 MB): [CMSIS-SP-00300-r3p1-00rel0.zip][CMSIS download]
+* CMSIS (97 MB): [CMSIS-SP-00300-r4p5-00rel0/CMSIS-SP-00300-r4p5-00rel0.zip][CMSIS download]
 
 Files that look specifically relevant:
 
@@ -83,6 +83,6 @@ Other headers etc in `sam0/utils/cmsis/samd21` could also be useful.
 [ASF-CMSIS]: http://asf.atmel.com/docs/latest/cmsis.html
 [ASF]: http://asf.atmel.com/docs/latest/index.html
 [BOSSA]: http://www.shumatech.com/web/products/bossa
-[CMSIS download]: https://silver.arm.com/download/Development_Tools/Keil/Keil:_generic/CMSIS-SP-00300-r3p1-00rel0/CMSIS-SP-00300-r3p1-00rel0.zip
+[CMSIS download]: https://silver.arm.com/download/ARM_and_AMBA_Architecture/CMSIS-SP-00300-r4p5-00rel0/CMSIS-SP-00300-r4p5-00rel0.zip
 [CMSIS]: http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php
 [avrdude]: http://www.nongnu.org/avrdude/
