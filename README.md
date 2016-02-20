@@ -66,17 +66,13 @@ Atmel Cortex Microcontroller Software Interface Standard (CMSIS)
 * ASF (421 MB): [asf-standalone-archive-3.30.0.43.zip][ASF download]
 * CMSIS (97 MB): [CMSIS-SP-00300-r4p5-00rel0/CMSIS-SP-00300-r4p5-00rel0.zip][CMSIS download]
 
-Files that look specifically relevant:
+ASF seems more useful for an Atmel microcontroller, and ships with a vendored copy of CMSIS v4.00.
 
-```
-sam0/utils/cmsis/samd21/include/pio/samd21g18a.h
-sam0/utils/cmsis/samd21/include/samd21g18a.h
-sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
-sam0/utils/linker_scripts/samd21/gcc/samd21g18a_flash.ld
-sam0/utils/linker_scripts/samd21/gcc/samd21g18a_sram.ld
-```
 
-Other headers etc in `sam0/utils/cmsis/samd21` could also be useful.
+Miscellaneous Notes
+-------------------
+
+LED ("digital pin 13") is on `PA17` of the MCU.
 
 
 [ASF download]: http://www.atmel.com/images/asf-standalone-archive-3.30.0.43.zip
