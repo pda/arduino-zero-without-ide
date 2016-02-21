@@ -1,41 +1,44 @@
+PROJ_NAME = blink
+
 CC=arm-none-eabi-gcc
-CFLAGS=-O0 -g -mthumb -mcpu=cortex-m0plus -Wall -std=c11
+LD=arm-none-eabi-ld
+OBJCOPY=arm-none-eabi-objcopy
+OBJDUMP=arm-none-eabi-objdump
+
+CFLAGS = -mcpu=cortex-m0plus -mthumb
+CFLAGS += -Wall -std=c11
+CFLAGS += -O0
+CFLAGS += -g
+CFLAGS += -ffunction-sections -fdata-sections # cargo-cult
+CFLAGS += -Wl,--gc-sections -Wl,-Map=$(PROJ_NAME).map
+CFLAGS += -T samd21g18a_flash.ld
 CFLAGS += -I asf/sam0/utils/cmsis/samd21/include
 CFLAGS += -I asf/sam0/utils/cmsis/samd21/source
 CFLAGS += -I asf/thirdparty/CMSIS/Include
 CFLAGS += -D __SAMD21G18A__
 
-LD=arm-none-eabi-ld
-LDFLAGS=-T samd21g18a_flash.ld
+SRCS = $(PROJ_NAME).c
+SRCS += asf/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
+SRCS += asf/sam0/utils/cmsis/samd21/source/system_samd21.c
 
-OBJCOPY=arm-none-eabi-objcopy
-OBJDUMP=arm-none-eabi-objdump
+OBJS = $(SRCS:.c=.o)
 
 .PHONY: all
-all: blink.hex
+all: $(PROJ_NAME).hex
 
-blink.hex: blink.bin
+$(PROJ_NAME).hex: $(PROJ_NAME).bin
 	$(OBJCOPY) -I binary -O ihex $^ $@
 
-blink.bin: blink.elf blink.lst
+$(PROJ_NAME).bin: $(PROJ_NAME).elf $(PROJ_NAME).lst
 	$(OBJCOPY) $< $@ -O binary
 
-blink.lst: blink.elf
+$(PROJ_NAME).lst: $(PROJ_NAME).elf
 	$(OBJDUMP) -D $^ > $@
 
-blink.elf: startup_samd21.o system_samd21.o blink.o
-	$(LD) $(LDFLAGS) -o $@ $^
-
-blink.o: blink.c
-	$(CC) -c $(CFLAGS) -o $@ $^
-
-startup_samd21.o: asf/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
-	$(CC) -c $(CFLAGS) -o $@ $^
-
-system_samd21.o: asf/sam0/utils/cmsis/samd21/source/system_samd21.c
-	$(CC) -c $(CFLAGS) -o $@ $^
+$(PROJ_NAME).elf: $(SRCS)
+	$(CC) $(CFLAGS) $^ -o $@
 
 
 .PHONY: clean
 clean:
-	rm -f -- *.hex *.bin *.elf *.o
+	rm -f -- *.hex *.bin *.elf *.o *.lst
