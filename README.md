@@ -63,7 +63,7 @@ mkdir -p ~/bin && ln -s ~/code/BOSSA/bin/bossa* ~/bin/
 Writing program to flash:
 
 ```
-$ bossac -p ttyACM0 -e -w blink.bin
+$ bossac -p ttyACM0 -e -w blink.bin -R
 Atmel SMART device 0x10010005 found
 Erase flash
 done in 0.824 seconds
@@ -71,6 +71,7 @@ done in 0.824 seconds
 Write 2916 bytes to flash (46 pages)
 [==============================] 100% (46/46 pages)
 done in 0.025 seconds
+CPU reset.
 ```
 
 OpenOCD

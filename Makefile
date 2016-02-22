@@ -14,8 +14,18 @@ CFLAGS += -Wl,--gc-sections -Wl,-Map=$(PROJ_NAME).map
 CFLAGS += -T samd21g18a_flash.ld
 
 CFLAGS += -I asf/common/utils
-CFLAGS += -I asf/sam0/drivers/system/pinmux
+CFLAGS += -I asf/common2/services/delay
+CFLAGS += -I asf/common2/services/delay/sam0
 CFLAGS += -I asf/sam0/drivers/port
+CFLAGS += -I asf/sam0/drivers/system
+CFLAGS += -I asf/sam0/drivers/system/clock
+CFLAGS += -I asf/sam0/drivers/system/clock/clock_samd21_r21_da
+CFLAGS += -I asf/sam0/drivers/system/clock/clock_samd21_r21_da/module_config
+CFLAGS += -I asf/sam0/drivers/system/interrupt
+CFLAGS += -I asf/sam0/drivers/system/interrupt/system_interrupt_samd21
+CFLAGS += -I asf/sam0/drivers/system/pinmux
+CFLAGS += -I asf/sam0/drivers/system/power/power_sam_d_r
+CFLAGS += -I asf/sam0/drivers/system/reset/reset_sam_d_r
 CFLAGS += -I asf/sam0/utils
 CFLAGS += -I asf/sam0/utils/cmsis/samd21/include
 CFLAGS += -I asf/sam0/utils/cmsis/samd21/source
@@ -24,9 +34,14 @@ CFLAGS += -I asf/sam0/utils/preprocessor
 CFLAGS += -I asf/thirdparty/CMSIS/Include
 
 CFLAGS += -D __SAMD21G18A__
+CFLAGS += -D SYSTICK_MODE
 
 SRCS = $(PROJ_NAME).c
+SRCS += asf/common/utils/interrupt/interrupt_sam_nvic.c
+SRCS += asf/common2/services/delay/sam0/systick_counter.c
 SRCS += asf/sam0/drivers/port/port.c
+SRCS += asf/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
+SRCS += asf/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
 SRCS += asf/sam0/drivers/system/pinmux/pinmux.c
 SRCS += asf/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
 SRCS += asf/sam0/utils/cmsis/samd21/source/system_samd21.c
