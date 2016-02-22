@@ -1,0 +1,12 @@
+# Copy this file to /etc/udev/rules.d/
+
+ACTION!="add|change", GOTO="openocd_rules_end"
+SUBSYSTEM!="usb|tty|hidraw", GOTO="openocd_rules_end"
+
+# Arduino Zero EDBG (debug/programming) interface
+ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2157", MODE="664", GROUP="uucp"
+
+# CMSIS-DAP compatible adapters
+#ATTRS{product}=="*CMSIS-DAP*", MODE="664", GROUP="plugdev"
+
+LABEL="openocd_rules_end"

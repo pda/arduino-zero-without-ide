@@ -1,7 +1,7 @@
 arduino-zero-without-ide
 ========================
 
-Messing with an Arduino Zero sans-IDE, on a ThinkPad running Arch Linux.
+Messing with an Arduino Zero board without using the Arduino IDE, from a ThinkPad running Arch Linux.
 
 Installed packages
 ------------------
@@ -11,12 +11,14 @@ arm-none-eabi-binutils
 arm-none-eabi-gcc
 arm-none-eabi-gdb
 arm-none-eabi-newlib
+make
+openocd
 ```
 
 BOSSA
 -----
 
-Atmel AVR uses [avrdude] but Atmel SAM (ARM core) uses [BOSSA].
+Atmel SAM (ARM core) can be programmed using [BOSSA]; the equivalent of programming an Atmel AVR using [avrdude]. On the Arduino Zero, the "native USB" port connects directly to the SAMD21 MCU (PA24,25; SERCOM 3) and is suitable for BOSSA.
 
 BOSSA mainline (including Arch's `bossa-bin` AUR package) currently doesn't support Arduino Zero;
 
@@ -58,8 +60,74 @@ make
 mkdir -p ~/bin && ln -s ~/code/BOSSA/bin/bossa* ~/bin/
 ```
 
-Atmel Cortex Microcontroller Software Interface Standard (CMSIS)
-----------------------------------------------------------------
+Writing program to flash:
+
+```
+$ bossac -p ttyACM0 -e -w blink.bin
+Atmel SMART device 0x10010005 found
+Erase flash
+done in 0.824 seconds
+
+Write 2916 bytes to flash (46 pages)
+[==============================] 100% (46/46 pages)
+done in 0.025 seconds
+```
+
+OpenOCD
+-------
+
+[OpenOCD] is a software interface to On Chip Debuggers including the Atmel EDBG chip on the Arduino Zero's programming/debug USB port. It can be used instead of BOSSA for flashing the device, and additionally for remote debugging with GDB etc.
+
+To give non-root access to the `/dev/ttyACM0` interface, OpenOCD ships with an example udev configuration at `/usr/share/openocd/contrib/99-openocd.rules`. There's a stripped down version in this repo, using the `uucp` group instead of `plugdev`, and only for the Atmel EDBG device. Drop it into `/etc/udev/rules.d/` or just run `openocd` as root if you really want.
+
+As with BOSSA, Arduino has forked OpenOCD at https://github.com/arduino/OpenOCD/tree/arduino however unlike BOSSA the upstream version also works. This repo contains an `openocd.cfg` based on [`arduino_zero.cfg`][OpenOCD config].
+
+```
+$ openocd
+Open On-Chip Debugger 0.9.0 (2015-05-19-13:50)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+Info : only one transport option; autoselect 'swd'
+adapter speed: 500 kHz
+adapter_nsrst_delay: 100
+cortex_m reset_config sysresetreq
+Info : CMSIS-DAP: SWD  Supported
+Info : CMSIS-DAP: Interface Initialised (SWD)
+Info : CMSIS-DAP: FW Version = 02.01.0157
+Info : SWCLK/TCK = 1 SWDIO/TMS = 1 TDI = 1 TDO = 1 nTRST = 0 nRESET = 1
+Info : CMSIS-DAP: Interface ready
+Info : clock speed 500 kHz
+Info : SWD IDCODE 0x0bc11477
+Info : at91samd21g18.cpu: hardware has 4 breakpoints, 2 watchpoints
+```
+
+```
+$ telnet 0 4444
+Trying 0.0.0.0...
+Connected to 0.
+Escape character is '^]'.
+Open On-Chip Debugger
+> halt
+target state: halted
+target halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x00002244 msp: 0x20002418
+> reset
+> exit
+Connection closed by foreign host.
+```
+
+```
+$ arm-none-eabi-gdb -ex 'target remote localhost:3333' blink.elf
+Reading symbols from blink.elf...done.
+Remote debugging using localhost:3333
+>>>
+```
+
+
+
+Atmel ASF and ARM CMSIS
+-----------------------
 
 * ARM's [CMSIS - Cortex Microcontroller Software Interface Standard][CMSIS] is a thing.
 * Atmel's [Atmel Software Framework (ASF)][ASF] [supports CMSIS][ASF-CMSIS].
@@ -68,11 +136,13 @@ Atmel Cortex Microcontroller Software Interface Standard (CMSIS)
 
 ASF seems more useful for an Atmel microcontroller, and ships with a vendored copy of CMSIS v4.00.
 
+Run `./extract-asf.sh` to download (421 MB) and extract (1.5 GB) the relevant parts of ASF, excluding components for non-ARM architectures (avr32, mega, xmega).
 
-Miscellaneous Notes
--------------------
 
-LED ("digital pin 13") is on `PA17` of the MCU.
+Hardware notes
+--------------
+
+Arduino Zero LED ("digital pin 13") is on `PA17` of the MCU.
 
 
 [ASF download]: http://www.atmel.com/images/asf-standalone-archive-3.30.0.43.zip
@@ -81,4 +151,6 @@ LED ("digital pin 13") is on `PA17` of the MCU.
 [BOSSA]: http://www.shumatech.com/web/products/bossa
 [CMSIS download]: https://silver.arm.com/download/ARM_and_AMBA_Architecture/CMSIS-SP-00300-r4p5-00rel0/CMSIS-SP-00300-r4p5-00rel0.zip
 [CMSIS]: http://www.arm.com/products/processors/cortex-m/cortex-microcontroller-software-interface-standard.php
+[OpenOCD config]: https://github.com/arduino/OpenOCD/blob/arduino/tcl/board/arduino_zero.cfg
+[OpenOCD]: http://openocd.org/
 [avrdude]: http://www.nongnu.org/avrdude/
