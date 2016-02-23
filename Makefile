@@ -68,8 +68,12 @@ clean:
 
 .PHONY: upload
 upload:
-	openocd -d2 -f openocd.cfg -c "telnet_port disabled; program blink.elf verify reset; shutdown"
+	openocd -d2 -f openocd.cfg -c "program {{blink.bin}} verify reset 0x00002000; shutdown"
+
+.PHONY: bossa
+bossa:
+	bossac --port=ttyACM0 --info --erase --write --verify --reset blink.bin
 
 .PHONY: bootloader
 bootloader:
-	openocd -d2 -f openocd.cfg -c "telnet_port disabled; program arduino/samd21_sam_ba.bin verify reset; shutdown"
+	openocd -d2 -f openocd.cfg -c "init; halt; at91samd bootloader 0; program {{arduino/samd21_sam_ba.bin}} verify reset; shutdown"
