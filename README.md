@@ -75,6 +75,9 @@ done in 0.025 seconds
 CPU reset.
 ```
 
+BOSSA only works on the native USB port, and only when in the bootloader by double-clicking the reset button (<= 500ms) or triggering a reset via the serial port. This means manual button presses to upload code, and swapping plugs to debug. Using OpenOCD on the Programming/Debug port is probably a better option.
+
+
 OpenOCD
 -------
 
