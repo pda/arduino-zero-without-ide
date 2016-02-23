@@ -11,6 +11,7 @@ arm-none-eabi-binutils
 arm-none-eabi-gcc
 arm-none-eabi-gdb
 arm-none-eabi-newlib
+gdb
 make
 openocd
 ```
@@ -81,7 +82,9 @@ OpenOCD
 
 To give non-root access to the `/dev/ttyACM0` interface, OpenOCD ships with an example udev configuration at `/usr/share/openocd/contrib/99-openocd.rules`. There's a stripped down version in this repo, using the `uucp` group instead of `plugdev`, and only for the Atmel EDBG device. Drop it into `/etc/udev/rules.d/` or just run `openocd` as root if you really want.
 
-As with BOSSA, Arduino has forked OpenOCD at https://github.com/arduino/OpenOCD/tree/arduino however unlike BOSSA the upstream version also works. This repo contains an `openocd.cfg` based on [`arduino_zero.cfg`][OpenOCD config].
+As with BOSSA, Arduino has forked OpenOCD at https://github.com/arduino/OpenOCD/tree/arduino and the original does not work with Arduino Zero. The official branch/package may partially work, but the program generally wont run after programming. The difference seems to be in https://github.com/arduino/OpenOCD/commit/d4b767947e867989e461a45626c17108dcb73f61 ... I modified `PKGBUILD` from https://aur.archlinux.org/packages/openocd-git/ to use the `arduino` repo/branch, and that worked better.
+
+The local `openocd.cfg` is based on [`arduino_zero.cfg`][OpenOCD config].
 
 ```
 $ openocd
@@ -143,11 +146,50 @@ Run `./extract-asf.sh` to download (421 MB) and extract (1.5 GB) the relevant pa
 Hardware notes
 --------------
 
-* Arduino Zero LED ("digital pin 13") is on `PA17` of the MCU.
-* Sparkfun SAMD21
-    * Blue LED ("pin 13") is `PA17`
-    * `TX_LED` (green) is `PA27`
-    * `RX_LED` (yellow) is `PB03`
+Arduino Zero
+
+```
+A0: PA02
+A1: PB08
+A2: PB09
+A3: PA04
+A4: PA05
+A5: PB02
+D0: PA11   SERCOM0 PAD3 mux C (SPI: SCK)
+D1: PA10   SERCOM0 PAD2 mux C (SPI: MOSI)
+D2: PA14
+D3: PA09   SERCOM0 PAD1 mux C (SPI: unused)
+D4: PA08   SERCOM0 PAD0 mux C (SPI: MISO)
+D5: PA15
+D6: PA20
+D7: PA21
+D8: PA06
+D9: PA07
+D10: PA18
+D11: PA16
+D12: PA19
+D13: PA17  (LED)
+```
+
+Sparkfun SAMD21
+
+  * Blue LED ("pin 13") is `PA17`
+  * `TX_LED` (green) is `PA27`
+  * `RX_LED` (yellow) is `PB03`
+
+2.2" TFT SPA 240x320 generic board I have, probably ILI9341 or similar:
+
+```
+1: VCC
+2: GND
+3: CS        PA15 (D5)
+4: RESET     PA09 (D3)
+5: DC/RS     PA14 (D2)
+6: SDI/MOSI  PA10 (D1)
+7: SCK       PA11 (D0)
+8: LED       PA20 (D6)
+9: SDO/MISO  PA08 (D4)
+```
 
 
 [ASF download]: http://www.atmel.com/images/asf-standalone-archive-3.30.0.43.zip
