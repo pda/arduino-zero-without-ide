@@ -65,3 +65,11 @@ $(PROJ_NAME).elf: $(SRCS)
 .PHONY: clean
 clean:
 	rm -f -- *.hex *.bin *.elf *.o *.lst
+
+.PHONY: upload
+upload:
+	openocd -d2 -f openocd.cfg -c "telnet_port disabled; program blink.elf verify reset; shutdown"
+
+.PHONY: bootloader
+bootloader:
+	openocd -d2 -f openocd.cfg -c "telnet_port disabled; program arduino/samd21_sam_ba.bin verify reset; shutdown"
