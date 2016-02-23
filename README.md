@@ -143,7 +143,11 @@ Run `./extract-asf.sh` to download (421 MB) and extract (1.5 GB) the relevant pa
 Hardware notes
 --------------
 
-Arduino Zero LED ("digital pin 13") is on `PA17` of the MCU.
+* Arduino Zero LED ("digital pin 13") is on `PA17` of the MCU.
+* Sparkfun SAMD21
+    * Blue LED ("pin 13") is `PA17`
+    * `TX_LED` (green) is `PA27`
+    * `RX_LED` (yellow) is `PB03`
 
 
 [ASF download]: http://www.atmel.com/images/asf-standalone-archive-3.30.0.43.zip
