@@ -1,4 +1,4 @@
-PROJ_NAME = blink
+PROJ_NAME = main
 
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-ld
@@ -6,17 +6,20 @@ OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
 CFLAGS = -mcpu=cortex-m0plus -mthumb
-CFLAGS += -Wall -std=c11
+CFLAGS += -Wall -Werror -std=c11
 CFLAGS += -O0
 CFLAGS += -g
 CFLAGS += -ffunction-sections -fdata-sections # cargo-cult
 CFLAGS += -Wl,--gc-sections -Wl,-Map=$(PROJ_NAME).map
 CFLAGS += -T samd21g18a_flash.ld
 
+CFLAGS += -I ./config
 CFLAGS += -I asf/common/utils
 CFLAGS += -I asf/common2/services/delay
 CFLAGS += -I asf/common2/services/delay/sam0
 CFLAGS += -I asf/sam0/drivers/port
+CFLAGS += -I asf/sam0/drivers/sercom
+CFLAGS += -I asf/sam0/drivers/sercom/spi
 CFLAGS += -I asf/sam0/drivers/system
 CFLAGS += -I asf/sam0/drivers/system/clock
 CFLAGS += -I asf/sam0/drivers/system/clock/clock_samd21_r21_da
@@ -40,6 +43,8 @@ SRCS = $(PROJ_NAME).c
 SRCS += asf/common/utils/interrupt/interrupt_sam_nvic.c
 SRCS += asf/common2/services/delay/sam0/systick_counter.c
 SRCS += asf/sam0/drivers/port/port.c
+SRCS += asf/sam0/drivers/sercom/sercom.c
+SRCS += asf/sam0/drivers/sercom/spi/spi.c
 SRCS += asf/sam0/drivers/system/clock/clock_samd21_r21_da/clock.c
 SRCS += asf/sam0/drivers/system/clock/clock_samd21_r21_da/gclk.c
 SRCS += asf/sam0/drivers/system/pinmux/pinmux.c
@@ -68,11 +73,11 @@ clean:
 
 .PHONY: upload
 upload:
-	openocd -d2 -f openocd.cfg -c "program {{blink.bin}} verify reset 0x00002000; shutdown"
+	openocd -d2 -f openocd.cfg -c "program {{main.bin}} verify reset 0x00002000; shutdown"
 
 .PHONY: bossa
 bossa:
-	bossac --port=ttyACM0 --info --erase --write --verify --reset blink.bin
+	bossac --port=ttyACM0 --info --erase --write --verify --reset main.bin
 
 .PHONY: bootloader
 bootloader:
