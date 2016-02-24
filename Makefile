@@ -52,10 +52,7 @@ SRCS += asf/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.c
 SRCS += asf/sam0/utils/cmsis/samd21/source/system_samd21.c
 
 .PHONY: all
-all: $(PROJ_NAME).hex
-
-$(PROJ_NAME).hex: $(PROJ_NAME).bin
-	$(OBJCOPY) -I binary -O ihex $^ $@
+all: $(PROJ_NAME).bin
 
 $(PROJ_NAME).bin: $(PROJ_NAME).elf $(PROJ_NAME).lst
 	$(OBJCOPY) $< $@ -O binary
@@ -69,7 +66,7 @@ $(PROJ_NAME).elf: $(SRCS)
 
 .PHONY: clean
 clean:
-	rm -f -- *.hex *.bin *.elf *.o *.lst
+	rm -f -- *.bin *.elf *.o *.lst
 
 .PHONY: upload
 upload:
