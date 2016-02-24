@@ -40,6 +40,8 @@ CFLAGS += -D __SAMD21G18A__
 CFLAGS += -D SYSTICK_MODE
 
 SRCS = $(PROJ_NAME).c
+SRCS += ili9341.c
+SRCS += errno.c
 SRCS += asf/common/utils/interrupt/interrupt_sam_nvic.c
 SRCS += asf/common2/services/delay/sam0/systick_counter.c
 SRCS += asf/sam0/drivers/port/port.c

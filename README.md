@@ -191,7 +191,7 @@ Sparkfun SAMD21
 6: SDI/MOSI  PA08 (D4)
 7: SCK       PA09 (D3)
 8: LED       PA20 (D6)
-9: SDO/MISO
+9: SDO/MISO  PA10 (D1)
 ```
 
 
