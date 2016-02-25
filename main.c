@@ -95,6 +95,7 @@ int main() {
 }
 
 static void setup() {
+  system_clock_init();
   delay_init();
   set_output(LED_0_PIN);
 
